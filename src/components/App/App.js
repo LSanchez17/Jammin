@@ -64,7 +64,6 @@ class App extends React.Component {
   search = (term) =>{
     //console.log(term);
     Spotify.search(term).then(tracks => { this.setState( {SearchResults: tracks}) });
-    event.preventDefault()
   }
 
 
