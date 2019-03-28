@@ -33,26 +33,31 @@ class App extends React.Component {
       return;
     }
     else{
-      let tempTlist = this.state.playlistTracks.concat(track);
-      console.log(`Current tracks in temporary array ${tempTlist}`);
+      let tempTlist = this.state.playlistTracks;
+      tempTlist.push(track);
       this.setState({playlistTracks: tempTlist});
+      console.log(`Current track being pushed ${track}`);
+      console.log(`Current tracks in temporary array ${this.state.playlistTracks}`);
+
     }
   }
 
   removeTrack = (track) =>{
     //same thing as above
     let trackDeleted = this.state.playlistTracks.filter(savedTrack =>  
-   savedTrack.id !== track )
-    this.setState({playlistTracks: [...trackDeleted]});
+   savedTrack.id !== track.id )
+    this.setState({playlistTracks: trackDeleted});
   }
 
   updatePlaylistName = (name) =>{
+    console.log(`Playlist name being set ${name}`);
     this.setState({playlistName: name});
   }
 
   savePlaylist(){
     //map the state?
-    const trackURIs = this.state.playlistTracks.map(track => track.uri);
+    const trackURIs = this.state.playlistTracks.map(track => { return track.uri });
+    console.log(`Saving playlist name ${this.state.playlistName}, with tracks uris ${trackURIs}`)
     //pass trackURIs and PlaylistName to save to account
     Spotify.savePlaylist(this.state.playlistName, trackURIs).then(() =>  this.setState({playlistName: 'New Playlist', playlistTracks: []}));
 
@@ -73,7 +78,7 @@ class App extends React.Component {
         <div className="Apps">
           <SeachBar onSearch={this.search}/>
           <div className="App-playlist">
-            <SearchResults SearchResults={this.state.SearchResults} addTrack={this.addTrack}/>
+            <SearchResults searchResults={this.state.SearchResults} addTrack={this.addTrack}/>
             <Playlist pName={this.state.playlistName} pTracks={this.state.playlistTracks} onRemove={this.removeTrack} onNameChange={this.updatePlaylistName} onSave={this.savePlaylist} />
           </div>
         </div>
